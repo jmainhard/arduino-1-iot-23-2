@@ -15,7 +15,7 @@ ThreeWire myWire(6, 7, 5);           // IO, SCLK, CE
 RtcDS1302<ThreeWire> Rtc(myWire);
 int pirSensor = 2;
 int A_hour = 12;
-int A_minute = 15;
+int A_minute = 31;
 int AlarmIsActive = 1;
 int buzzer = 3;
 
@@ -98,6 +98,8 @@ void loop() {
     Serial.println("RTC lost confidence in the DateTime!");
   }
 
+
+
   if (now.Hour() == A_hour && now.Minute() == A_minute && AlarmIsActive == 1 && now.Second() >= 0 && now.Second() <= 2) {
     tone(buzzer, 1);  //You can modify the tone or make your own sound
     delay(100);
@@ -107,11 +109,20 @@ void loop() {
     // Message to show when the alarm is ringing
     lcd.print("Get up !!!");
     Serial.println("Get Up !!!");
-    delay(10000);
+
+
+    int value = digitalRead(pirSensor);
+
+    Serial.println(value);
+    if (value == 1) {
+      AlarmIsActive = 0;
+    }
+
+    delay(5000);
+  } else {
+    noTone(buzzer);
   }
 
-  int value = digitalRead(pirSensor);
-  Serial.println(value);
   delay(1000);  // one second
 }
 
