@@ -1,4 +1,4 @@
-// Nombre archivo: Debe llamarse cóomo el directorio en el que se encuentra por Arduino IDE
+// Nombre archivo: Debe llamarse cómo el directorio en el que se encuentra por Arduino IDE
 // CONEXIONES:
 // DS1302 CLK/SCLK --> 7
 // DS1302 DAT/IO --> 6
@@ -14,9 +14,8 @@ LiquidCrystal_I2C lcd(0x3F, 16, 2);  // set the LCD address to 0x3F for a 16 cha
 ThreeWire myWire(6, 7, 5);           // IO, SCLK, CE
 RtcDS1302<ThreeWire> Rtc(myWire);
 int pirSensor = 2;
-int A_hour = 12;
-int A_minute = 31;
-int AlarmIsActive = 1;
+int A_hour = 17;
+int A_minute = 02;
 int buzzer = 3;
 
 // ♥️
@@ -70,9 +69,6 @@ void setupRTC() {
   }
 }
 
-void setupAlarm() {
-}
-
 void setupLCD() {
   lcd.init();  // initialize the lcd
   lcd.backlight();
@@ -99,8 +95,7 @@ void loop() {
   }
 
 
-
-  if (now.Hour() == A_hour && now.Minute() == A_minute && AlarmIsActive == 1 && now.Second() >= 0 && now.Second() <= 2) {
+  if (now.Hour() == A_hour && now.Minute() == A_minute && now.Second() >= 0 && now.Second() <= 2) {
     tone(buzzer, 1);  //You can modify the tone or make your own sound
     delay(100);
     tone(buzzer, 2);
@@ -109,21 +104,13 @@ void loop() {
     // Message to show when the alarm is ringing
     lcd.print("Get up !!!");
     Serial.println("Get Up !!!");
-
-
-    int value = digitalRead(pirSensor);
-
-    Serial.println(value);
-    if (value == 1) {
-      AlarmIsActive = 0;
-    }
-
-    delay(5000);
-  } else {
-    noTone(buzzer);
   }
+  int value = digitalRead(pirSensor);
 
-  delay(1000);  // one second
+  Serial.println(value);
+  if (value == 1) {
+    noTone(buzzer);
+  }  // one second
 }
 
 #define countof(a) (sizeof(a) / sizeof(a[0]))
