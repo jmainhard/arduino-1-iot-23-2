@@ -11,8 +11,9 @@
 #include <LiquidCrystal_I2C.h>
 
 LiquidCrystal_I2C lcd(0x3F, 16, 2);  // set the LCD address to 0x3F for a 16 chars and 2 line display
-ThreeWire myWire(6, 7, 5);  // IO, SCLK, CE
+ThreeWire myWire(6, 7, 5);           // IO, SCLK, CE
 RtcDS1302<ThreeWire> Rtc(myWire);
+int pirSensor = 2;
 
 // ♥️
 byte customChar[8] = {
@@ -26,18 +27,15 @@ byte customChar[8] = {
   0b00000
 };
 
-void setup() {
-  Serial.begin(57600);
-
+void setupRTC() {
+  RtcDateTime compiled = RtcDateTime(__DATE__, __TIME__);
   Serial.print("compiled: ");
   Serial.print(__DATE__);
   Serial.println(__TIME__);
-
-  Rtc.Begin();
-
-  RtcDateTime compiled = RtcDateTime(__DATE__, __TIME__);
   printDateTime(compiled);
   Serial.println();
+  Rtc.Begin();
+
 
   if (!Rtc.IsDateTimeValid()) {
     // Common Causes:
@@ -67,14 +65,25 @@ void setup() {
   } else if (now == compiled) {
     Serial.println("RTC is the same as compile time! (not expected but all is fine)");
   }
+}
 
+void setupLCD() {
   lcd.init();  // initialize the lcd
   lcd.backlight();
-
   lcd.createChar(0, customChar);  // create a new custom character
-
-  lcd.setCursor(2, 1);  // move cursor to (2, 0)
+  
+  lcd.setCursor(0, 1);  // move cursor to (2, 0)
   lcd.write((byte)0);   // print the custom char at (2, 0)
+
+  lcd.setCursor(15, 1);  // move cursor to (2, 0)
+  lcd.write((byte)0);   // print the custom char at (2, 0)
+}
+
+void setup() {
+  Serial.begin(57600);
+  pinMode(pirSensor, INPUT);
+  setupRTC();
+  setupLCD();
 }
 
 void loop() {
@@ -89,6 +98,8 @@ void loop() {
     Serial.println("RTC lost confidence in the DateTime!");
   }
 
+  int value = digitalRead(pirSensor);
+  Serial.println(value);
   delay(1000);  // one second
 }
 
