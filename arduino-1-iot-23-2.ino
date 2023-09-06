@@ -14,6 +14,9 @@ LiquidCrystal_I2C lcd(0x3F, 16, 2);  // set the LCD address to 0x3F for a 16 cha
 ThreeWire myWire(6, 7, 5);           // IO, SCLK, CE
 RtcDS1302<ThreeWire> Rtc(myWire);
 int pirSensor = 2;
+int A_hour = 12;
+int A_minute = 2;
+int AlarmIsActive = 1;
 
 // ♥️
 byte customChar[8] = {
@@ -35,7 +38,6 @@ void setupRTC() {
   printDateTime(compiled);
   Serial.println();
   Rtc.Begin();
-
 
   if (!Rtc.IsDateTimeValid()) {
     // Common Causes:
@@ -67,16 +69,20 @@ void setupRTC() {
   }
 }
 
+void setupAlarm() {
+
+}
+
 void setupLCD() {
   lcd.init();  // initialize the lcd
   lcd.backlight();
   lcd.createChar(0, customChar);  // create a new custom character
-  
+
   lcd.setCursor(0, 1);  // move cursor to (2, 0)
   lcd.write((byte)0);   // print the custom char at (2, 0)
 
   lcd.setCursor(15, 1);  // move cursor to (2, 0)
-  lcd.write((byte)0);   // print the custom char at (2, 0)
+  lcd.write((byte)0);    // print the custom char at (2, 0)
 }
 
 void setup() {
@@ -96,6 +102,18 @@ void loop() {
     // Common Causes:
     //    1) the battery on the device is low or even missing and the power line was disconnected
     Serial.println("RTC lost confidence in the DateTime!");
+  }
+
+  if (now.Hour() == A_hour && now.Minute() == A_minute && AlarmIsActive == 1 && now.Second() >= 0 && now.Second() <= 2) {
+    // tone(buzzer, 1000);  //You can modify the tone or make your own sound
+    // delay(100);
+    // tone(buzzer, 2000);
+    // delay(100);
+    lcd.clear();
+    // Message to show when the alarm is ringing
+    lcd.print("Get up !!!");  
+    Serial.println("Get Up !!!");
+    delay(10000);
   }
 
   int value = digitalRead(pirSensor);
