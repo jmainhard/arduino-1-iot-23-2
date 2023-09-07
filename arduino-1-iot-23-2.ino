@@ -15,7 +15,7 @@ ThreeWire myWire(6, 7, 5);           // IO, SCLK, CE
 RtcDS1302<ThreeWire> Rtc(myWire);
 int pirSensor = 2;
 int A_hour = 17;
-int A_minute = 02;
+int A_minute = 58;
 int buzzer = 3;
 
 // ♥️
@@ -104,6 +104,7 @@ void loop() {
     // Message to show when the alarm is ringing
     lcd.print("Get up !!!");
     Serial.println("Get Up !!!");
+    delay(5000);
   }
   int value = digitalRead(pirSensor);
 
