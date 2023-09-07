@@ -16,6 +16,15 @@ Librerias:
 - [LiquidCrystal_I2C](https://github.com/johnrickman/LiquidCrystal_I2C)
 - [Rtc by Makuna](https://github.com/Makuna/Rtc)
 
+## Diagramas
+Instalación del Arduino. Vista esquemática y de circuito. No se incluye módulo RTC
+
+### Circuito
+![Circuito](circuito.png)
+
+### Esquema
+![Esquema](esquema.png)
+
 ## Contribuidores
 - Camilo Godoy
 - Constanza Moya
